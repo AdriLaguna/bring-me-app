@@ -40,61 +40,61 @@ def create_user():
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Viajes
-@app.route('/viajes', methods=['POST'])
-def create_viaje():
-    conductor = request.json['conductor']
-    fecha = request.json['fecha']
-    origenLatitud = request.json['origenLatitud']
-    origenLongitud = request.json['origenLongitud']
-    destinoLatitud = request.json['destinoLatitud']
-    destinoLongitud = request.json['destinoLongitud']
-    plazas = request.json['plazas']
+@app.route('/trips', methods=['POST'])
+def create_trip():
+    driver = request.json['driver']
+    date = request.json['date']
+    originLatitude = request.json['originLatitude']
+    originLongitude = request.json['originLongitude']
+    destinationLatitude = request.json['destinationLatitude']
+    destinationLongitude = request.json['destinationLongitude']
+    seats = request.json['seats']
     
-    if conductor and fecha and origenLatitud and origenLongitud and destinoLatitud and destinoLongitud:
-        id = mongo.db.viajes.insert(
-            {'conductor': conductor, 'fecha': fecha, 'origenLatitud': origenLatitud, 'origenLongitud': origenLongitud, 'destinoLatitud': destinoLatitud,
-            'destinoLongitud': destinoLongitud, 'plazas': plazas}
+    if driver and date and originLatitude and originLongitude and destinationLatitude and destinationLongitude:
+        id = mongo.db.trips.insert(
+            {'driver': driver, 'date': date, 'originLatitude': originLatitude, 'originLongitude': originLongitude, 'destinationLatitude': destinationLatitude,
+            'destinationLongitude': destinationLongitude, 'seats': seats}
         )
-        response = jsonify({'message': 'Viaje con id='+ str(id) +' creado satisfactoriamente'})
+        response = jsonify({'message': 'Trip with id='+ str(id) +' created succesfully'})
         return response
     else:
         return not_found()
 
-@app.route('/viajes', methods=['GET'])
-def get_viajes():
-    viajes = mongo.db.viajes.find()
-    response = json_util.dumps(viajes)
+@app.route('/trips', methods=['GET'])
+def get_trips():
+    trips = mongo.db.trips.find()
+    response = json_util.dumps(trips)
     return Response(response, mimetype='application/json')
 
-@app.route('/viajes/<id>', methods=['GET'])
-def get_viaje(id):
-    viaje = mongo.db.viajes.find_one({'_id': ObjectId(id)})
-    response = json_util.dumps(viaje)
+@app.route('/trips/<id>', methods=['GET'])
+def get_trip(id):
+    trip = mongo.db.trips.find_one({'_id': ObjectId(id)})
+    response = json_util.dumps(trip)
     return Response(response, mimetype='application/json')
 
-@app.route('/viajes/<id>', methods=['PUT'])
-def update_viaje(id):
-    conductor = request.json['conductor']
-    fecha = request.json['fecha']
-    origenLatitud = request.json['origenLatitud']
-    origenLongitud = request.json['origenLongitud']
-    destinoLatitud = request.json['destinoLatitud']
-    destinoLongitud = request.json['destinoLongitud']
-    plazas = request.json['plazas']
+@app.route('/trips/<id>', methods=['PUT'])
+def update_trip(id):
+    driver = request.json['driver']
+    date = request.json['date']
+    originLatitude = request.json['originLatitude']
+    originLongitude = request.json['originLongitude']
+    destinationLatitude = request.json['destinationLatitude']
+    destinationLongitude = request.json['destinationLongitude']
+    seats = request.json['seats']
 
-    if conductor and fecha and origenLatitud and origenLongitud and destinoLatitud and destinoLongitud:
-        mongo.db.viajes.update_one({'_id': ObjectId(id)}, {'$set': {'conductor': conductor, 'fecha': fecha, 'origenLatitud': origenLatitud,
-            'origenLongitud': origenLongitud, 'destinoLatitud': destinoLatitud, 'destinoLongitud': destinoLongitud, 'plazas': plazas}})
+    if driver and date and originLatitude and originLongitude and destinationLatitude and destinationLongitude:
+        mongo.db.trips.update_one({'_id': ObjectId(id)}, {'$set': {'driver': driver, 'date': date, 'originLatitude': originLatitude,
+            'originLongitude': originLongitude, 'destinationLatitude': destinationLatitude, 'destinationLongitude': destinationLongitude, 'seats': seats}})
         
-        response = jsonify({'message': 'Viaje con id='+ id + ' actualizado con éxito'})
+        response = jsonify({'message': 'Trip with id='+ id + ' updated succesfully'})
         return response
     else:
         return not_found()
 
-@app.route('/viajes/<id>', methods=['DELETE'])
-def delete_viaje(id):
-    mongo.db.viajes.delete_one({'_id': ObjectId(id)})
-    response = jsonify({'message': 'Viaje con id='+ id + ' eliminado con éxito'})
+@app.route('/trips/<id>', methods=['DELETE'])
+def delete_trip(id):
+    mongo.db.trips.delete_one({'_id': ObjectId(id)})
+    response = jsonify({'message': 'Trip with id='+ id + ' deleted succesfully'})
     return response
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------
