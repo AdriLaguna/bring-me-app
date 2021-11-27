@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.config['MONGO_URI'] = 'mongodb+srv://adri:adri@cluster0.5izav.mongodb.net/bring_me_app?retryWrites=true&w=majority'
 mongo = PyMongo(app)
 
+
 @app.route('/users', methods=['POST'])
 def create_user():
     name = request.json['name']
@@ -37,6 +38,24 @@ def create_user():
         return response
     else:
         return not_found()
+
+@app.route('/users/name/<name>', methods=['GET'])
+def get_users_by_name(name):
+    users = mongo.db.user.find({
+        "name": {
+            "$regex": ".*" + name + ".*"
+        }})
+    response = json_util.dumps(users)
+    return Response(response, mimetype='application/json')
+
+@app.route('/users/email/<email>', methods=['GET'])
+def get_users_by_email(email):
+    users = mongo.db.user.find({
+        "email": {
+            "$regex": ".*" + email + ".*"
+        }})
+    response = json_util.dumps(users)
+    return Response(response, mimetype='application/json')
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Viajes
