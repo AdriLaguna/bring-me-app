@@ -98,6 +98,58 @@ def delete_trip(id):
     return response
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------
+#Menssaje
+@app.route('/message', methods=['POST'])
+def create_message():
+    sender = request.json['sender']
+    receiver = request.json['receiver']
+    message = request.json['message']
+    date = request.json['date']
+    
+    if sender and receiver and date:
+        id = mongo.db.messages.insert_one(
+            {'sender': sender, 'receiver': receiver, 'message': message, 'date': date}
+        )
+        response = jsonify({'message': 'Message '+ str(message) +' created succesfully'})
+        return response
+    else:
+        return not_found()
+
+@app.route('/message', methods=['GET'])
+def get_messages():
+    messages = mongo.db.messages.find()
+    response = json_util.dumps(messages)
+    return Response(response, mimetype='application/json')
+
+@app.route('/message/<id1>/<id2>', methods=['GET'])
+def get_conversation(id1,id2):
+    messages1 = mongo.db.messages.find({"$or":[ {'sender': id1, 'receiver': id2}, {'sender': id2, 'receiver': id1}]})
+    messages1 = sorted(messages1, key=lambda k: k['date'], reverse=False)
+    response = json_util.dumps(messages1)
+    return Response(response, mimetype='application/json')
+
+@app.route('/message/<id>', methods=['PUT'])
+def update_message(id):
+    sender = request.json['sender']
+    receiver = request.json['receiver']
+    message = request.json['message']
+    date = request.json['date']
+
+    if sender and receiver and date:
+        mongo.db.messages.update_one({'_id': ObjectId(id)}, {'$set': {'sender': sender, 'receiver': receiver, 'message': message, 'date': date}})
+        
+        response = jsonify({'message': 'Message with id='+ id + ' updated succesfully'})
+        return response
+    else:
+        return not_found()
+
+@app.route('/message/<id>', methods=['DELETE'])
+def delete_message(id):
+    mongo.db.messages.delete_one({'_id': ObjectId(id)})
+    response = jsonify({'message': 'Message with id='+ id + ' deleted succesfully'})
+    return response
+#----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 @app.errorhandler(404)
 def not_found(error=None):
