@@ -137,7 +137,7 @@ def delete_trip(id):
     return response
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------
-#Menssaje
+#Menssage
 @app.route('/message', methods=['POST'])
 def create_message():
     sender = request.json['sender']
