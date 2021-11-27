@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['MONGO_URI'] = 'mongodb+srv://adri:adri@cluster0.5izav.mongodb.net/bring_me_app?retryWrites=true&w=majority'
 mongo = PyMongo(app)
 
-@app.route('/users', methods=['POST'])
+@app.route('/user', methods=['POST'])
 def create_user():
     name = request.json['name']
     email = request.json['email']
@@ -37,6 +37,45 @@ def create_user():
         return response
     else:
         return not_found()
+
+@app.route('/user', methods=['GET'])
+def get_users():
+    users = mongo.db.user.find()
+    response = json_util.dumps(users)
+    return Response(response, mimetype='application/json')
+
+@app.route('/user/<id>', methods=['GET'])
+def get_user(id):
+    users = mongo.db.user.find_one({'_id': ObjectId(id)})
+    response = json_util.dumps(users)
+    return Response(response, mimetype='application/json')
+
+@app.route('/user/<id>', methods=['PUT'])
+def update_user(id):
+    name = request.json['name']
+    email = request.json['email']
+    password = request.json['password']
+    address = request.json['address']
+    zip_code = request.json['zip_code']
+    phone = request.json['phone']
+    admin = request.json['admin']
+
+    hashed_password = generate_password_hash(password)
+
+    if name and email and password and address and zip_code and phone and admin:
+        mongo.db.user.update_one({'_id': ObjectId(id)}, {'$set': {'name': name, 'email': email, 'password': hashed_password,
+            'address': address, 'zip_code': int(zip_code), 'phone': int(phone), 'admin': int(admin)}})
+        
+        response = jsonify({'message': 'User with id='+ id + ' updated succesfully'})
+        return response
+    else:
+        return not_found()
+
+@app.route('/user/<id>', methods=['DELETE'])
+def delete_user(id):
+    mongo.db.user.delete_one({'_id': ObjectId(id)})
+    response = jsonify({'message': 'User with id='+ id + ' deleted succesfully'})
+    return response
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Viajes
