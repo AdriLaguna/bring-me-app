@@ -13,6 +13,7 @@ mongo = PyMongo(app)
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Users
 
+
 @app.route("/user", methods=["POST"])
 def create_user():
     name = request.json["name"]
@@ -261,9 +262,9 @@ def get_conversations(id):
     for message in messages:
         receiver = ObjectId(message.get("receiver"))
         sender = ObjectId(message.get("sender"))
-        if (sender not in users_id and (sender != ObjectId(id))):
+        if sender not in users_id and (sender != ObjectId(id)):
             users_id.append(sender)
-        if (receiver not in users_id and (receiver != ObjectId(id))):
+        if receiver not in users_id and (receiver != ObjectId(id)):
             users_id.append(receiver)
     users = mongo.db.user.find({"_id": {"$in": users_id}})
     response = json_util.dumps(users)
