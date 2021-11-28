@@ -119,8 +119,10 @@ def delete_user(id):
 def create_trip():
     driver = request.json["driver"]
     date = request.json["date"]
+    origin = request.json["origin"]
     originLatitude = request.json["originLatitude"]
     originLongitude = request.json["originLongitude"]
+    destination = request.json["destination"]
     destinationLatitude = request.json["destinationLatitude"]
     destinationLongitude = request.json["destinationLongitude"]
     seats = request.json["seats"]
@@ -128,19 +130,24 @@ def create_trip():
     if (
         driver
         and date
+        and origin
         and originLatitude
         and originLongitude
+        and destination
         and destinationLatitude
         and destinationLongitude
+        and seats
     ):
         id = mongo.db.trips.insert(
             {
                 "driver": driver,
                 "date": date,
-                "originLatitude": originLatitude,
-                "originLongitude": originLongitude,
-                "destinationLatitude": destinationLatitude,
-                "destinationLongitude": destinationLongitude,
+                "origin": origin,
+                "originLatitude": float(originLatitude),
+                "originLongitude": float(originLongitude),
+                "destination": destination,
+                "destinationLatitude": float(destinationLatitude),
+                "destinationLongitude": float(destinationLongitude),
                 "seats": int(seats),
             }
         )
@@ -172,13 +179,34 @@ def get_trips_with_minimum_seats(numseats):
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
 
+@app.route("/trip/origin/<name>", methods=["GET"])
+def get_trips_by_origin(name):
+    trips = mongo.db.trips.find({"origin": {"$regex": ".*" + name + "*."}})
+    response = json_util.dumps(trips)
+    return Response(response, mimetype="application/json")
+
+@app.route("/trip/destination/<name>", methods=["GET"])
+def get_trips_by_destination(name):
+    trips = mongo.db.trips.find({"destination": {"$regex": ".*" + name + "*."}})
+    response = json_util.dumps(trips)
+    return Response(response, mimetype="application/json")
+
+@app.route("/trip/origin_destination/<name1>/<name2>", methods=["GET"])
+def get_origin_destination(name1, name2):
+    trips = mongo.db.trips.find(
+        {"$and": [{"origin": {"$regex": ".*" + name1 + "*."}}, {"destination": {"$regex": ".*" + name2 + "*."}}]}
+    )
+    response = json_util.dumps(trips)
+    return Response(response, mimetype="application/json")
 
 @app.route("/trip/<id>", methods=["PUT"])
 def update_trip(id):
     driver = request.json["driver"]
     date = request.json["date"]
+    origin = request.json["origin"]
     originLatitude = request.json["originLatitude"]
     originLongitude = request.json["originLongitude"]
+    destination = request.json["destination"]
     destinationLatitude = request.json["destinationLatitude"]
     destinationLongitude = request.json["destinationLongitude"]
     seats = request.json["seats"]
@@ -186,10 +214,13 @@ def update_trip(id):
     if (
         driver
         and date
+        and origin
         and originLatitude
         and originLongitude
+        and destination
         and destinationLatitude
         and destinationLongitude
+        and seats
     ):
         mongo.db.trips.update_one(
             {"_id": ObjectId(id)},
@@ -197,10 +228,12 @@ def update_trip(id):
                 "$set": {
                     "driver": driver,
                     "date": date,
-                    "originLatitude": originLatitude,
-                    "originLongitude": originLongitude,
-                    "destinationLatitude": destinationLatitude,
-                    "destinationLongitude": destinationLongitude,
+                    "origin": origin,
+                    "originLatitude": float(originLatitude),
+                    "originLongitude": float(originLongitude),
+                    "destination": destination,
+                    "destinationLatitude": float(destinationLatitude),
+                    "destinationLongitude": float(destinationLongitude),
                     "seats": int(seats),
                 }
             },
