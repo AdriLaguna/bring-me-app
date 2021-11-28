@@ -10,6 +10,8 @@ app.config[
 ] = "mongodb+srv://adri:adri@cluster0.5izav.mongodb.net/bring_me_app?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Users
 
 @app.route("/user", methods=["POST"])
 def create_user():
@@ -199,7 +201,7 @@ def update_trip(id):
                     "originLongitude": originLongitude,
                     "destinationLatitude": destinationLatitude,
                     "destinationLongitude": destinationLongitude,
-                    "seats": seats,
+                    "seats": int(seats),
                 }
             },
         )
