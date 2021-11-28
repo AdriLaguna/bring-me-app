@@ -1,7 +1,7 @@
 import json
+import requests
 from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo
-import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 from bson.objectid import ObjectId
@@ -182,11 +182,13 @@ def get_trips_with_minimum_seats(numseats):
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
 
+
 @app.route("/trip/origin/<name>", methods=["GET"])
 def get_trips_by_origin(name):
     trips = mongo.db.trips.find({"origin": {"$regex": ".*" + name + "*."}})
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
+
 
 @app.route("/trip/destination/<name>", methods=["GET"])
 def get_trips_by_destination(name):
@@ -194,13 +196,20 @@ def get_trips_by_destination(name):
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
 
+
 @app.route("/trip/origin_destination/<name1>/<name2>", methods=["GET"])
 def get_origin_destination(name1, name2):
     trips = mongo.db.trips.find(
-        {"$and": [{"origin": {"$regex": ".*" + name1 + "*."}}, {"destination": {"$regex": ".*" + name2 + "*."}}]}
+        {
+            "$and": [
+                {"origin": {"$regex": ".*" + name1 + "*."}},
+                {"destination": {"$regex": ".*" + name2 + "*."}},
+            ]
+        }
     )
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
+
 
 @app.route("/trip/<id>", methods=["PUT"])
 def update_trip(id):
@@ -353,13 +362,16 @@ def delete_message(id):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
 # Datos externos
-@app.route("/aparcamientos", methods=["GET"])
-def get_aparcamientos():
-    url = "https://datosabiertos.malaga.eu/recursos/aparcamientos/ocupappublicosmun/ocupappublicosmunfiware.json"
-    response = requests.get(url)
-    json_data = json.loads(response.text)
-    return json_data
 
+
+@app.route("/precio-carburante", methods=["GET"])
+def get_precio_carburante():
+    url = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
+    data = requests.get(url).json()
+    return data
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 @app.errorhandler(404)
