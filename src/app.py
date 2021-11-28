@@ -358,6 +358,41 @@ def get_precio_carburante():
     data = requests.get(url).json()
     return data
 
+# gasolineras por codigo de provincia
+# malaga es 29
+@app.route("/gasolineras-provincia/<id>", methods=["GET"])
+def get_gasolinera_by_province(id):
+    url = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
+    data = requests.get(url).json()['ListaEESSPrecio']
+    data_filtrada = []
+    for gasolinera in data:
+        if gasolinera['IDProvincia'] == id:
+            data_filtrada.append(gasolinera)
+    return {"gasolineras":data_filtrada}
+
+# gasolineras por codigo de municipio
+# algarrobo 4459
+@app.route("/gasolineras-municipio/<id>", methods=["GET"])
+def get_gasolinera_by_municipio(id):
+    url = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
+    data = requests.get(url).json()['ListaEESSPrecio']
+    data_filtrada = []
+    for gasolinera in data:
+        if gasolinera['IDMunicipio'] == id:
+            data_filtrada.append(gasolinera)
+    return {"gasolineras":data_filtrada}
+
+# gasolineras que tienen biodiesel
+@app.route("/gasolineras-biodiesel", methods=["GET"])
+def get_gasolinera_biodiesel():
+    url = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
+    data = requests.get(url).json()['ListaEESSPrecio']
+    data_filtrada = []
+    for gasolinera in data:
+        if gasolinera['Precio Biodiesel'] != "":
+            data_filtrada.append(gasolinera)
+    return {"gasolineras":data_filtrada}
+
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
