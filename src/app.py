@@ -287,14 +287,20 @@ def get_messages_containing_text(text):
     return Response(response, mimetype="application/json")
 
 
-# @app.route("/conversation/<id>", methods=["GET"])
-# def get_conversations(id):
-#     messages = mongo.db.messages.find({"$or": [{"sender": id}, {"receiver": id}]}, {"sender": 1, "receiver": 1})
-#     users = mongo.db.user.find(
-#         {"_id": {"$in": messages.distinct({"receiver"})}},
-#     )
-#     response = json_util.dumps(messages)
-#     return Response(response, mimetype="application/json")
+@app.route("/conversation/<id>", methods=["GET"])
+def get_conversations(id):
+    messages = mongo.db.messages.find({"$or": [{"sender": id}, {"receiver": id}]})
+    users_id = []
+    for message in messages:
+        receiver = ObjectId(message.get("receiver"))
+        sender = ObjectId(message.get("sender"))
+        if (sender not in users_id and (sender != ObjectId(id))):
+            users_id.append(sender)
+        if (receiver not in users_id and (receiver != ObjectId(id))):
+            users_id.append(receiver)
+    users = mongo.db.user.find({"_id": {"$in": users_id}})
+    response = json_util.dumps(users)
+    return Response(response, mimetype="application/json")
 
 
 @app.route("/conversation/<id1>/<id2>", methods=["GET"])
