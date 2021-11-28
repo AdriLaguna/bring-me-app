@@ -1,7 +1,7 @@
 import json
-import requests
 from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo
+import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 from bson.objectid import ObjectId
@@ -14,7 +14,6 @@ mongo = PyMongo(app)
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Users
-
 
 @app.route("/user", methods=["POST"])
 def create_user():
@@ -182,13 +181,11 @@ def get_trips_with_minimum_seats(numseats):
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
 
-
 @app.route("/trip/origin/<name>", methods=["GET"])
 def get_trips_by_origin(name):
     trips = mongo.db.trips.find({"origin": {"$regex": ".*" + name + "*."}})
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
-
 
 @app.route("/trip/destination/<name>", methods=["GET"])
 def get_trips_by_destination(name):
@@ -196,20 +193,13 @@ def get_trips_by_destination(name):
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
 
-
 @app.route("/trip/origin_destination/<name1>/<name2>", methods=["GET"])
 def get_origin_destination(name1, name2):
     trips = mongo.db.trips.find(
-        {
-            "$and": [
-                {"origin": {"$regex": ".*" + name1 + "*."}},
-                {"destination": {"$regex": ".*" + name2 + "*."}},
-            ]
-        }
+        {"$and": [{"origin": {"$regex": ".*" + name1 + "*."}}, {"destination": {"$regex": ".*" + name2 + "*."}}]}
     )
     response = json_util.dumps(trips)
     return Response(response, mimetype="application/json")
-
 
 @app.route("/trip/<id>", methods=["PUT"])
 def update_trip(id):
@@ -306,9 +296,9 @@ def get_conversations(id):
     for message in messages:
         receiver = ObjectId(message.get("receiver"))
         sender = ObjectId(message.get("sender"))
-        if sender not in users_id and (sender != ObjectId(id)):
+        if (sender not in users_id and (sender != ObjectId(id))):
             users_id.append(sender)
-        if receiver not in users_id and (receiver != ObjectId(id)):
+        if (receiver not in users_id and (receiver != ObjectId(id))):
             users_id.append(receiver)
     users = mongo.db.user.find({"_id": {"$in": users_id}})
     response = json_util.dumps(users)
@@ -362,8 +352,6 @@ def delete_message(id):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
 # Datos externos
-
-
 @app.route("/precio-carburante", methods=["GET"])
 def get_precio_carburante():
     url = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
@@ -372,6 +360,7 @@ def get_precio_carburante():
 
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 @app.errorhandler(404)
