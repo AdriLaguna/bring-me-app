@@ -1,5 +1,7 @@
+import json
 from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo
+import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 from bson.objectid import ObjectId
@@ -349,6 +351,14 @@ def delete_message(id):
 
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
+# Datos externos
+@app.route("/aparcamientos", methods=["GET"])
+def get_aparcamientos():
+    url = "https://datosabiertos.malaga.eu/recursos/aparcamientos/ocupappublicosmun/ocupappublicosmunfiware.json"
+    response = requests.get(url)
+    json_data = json.loads(response.text)
+    return json_data
+
 
 
 @app.errorhandler(404)
