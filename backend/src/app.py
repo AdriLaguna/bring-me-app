@@ -1,16 +1,18 @@
-import json
 from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 from bson.objectid import ObjectId
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config[
     "MONGO_URI"
 ] = "mongodb+srv://adri:adri@cluster0.5izav.mongodb.net/bring_me_app?retryWrites=true&w=majority"
 mongo = PyMongo(app)
+
+CORS(app)
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Users
