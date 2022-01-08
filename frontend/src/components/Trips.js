@@ -235,13 +235,13 @@ export const Trips = () => {
                 <td>
                   <button
                     className="btn btn-secondary btn-sm btn-block"
-                    onClick={(e) => editTrip(trip._id)}
+                    onClick={(e) => editTrip(trip._id? trip._id.$oid: null)}
                   >
                     Editar
                   </button>
                   <button
                     className="btn btn-danger btn-sm btn-block"
-                    onClick={(e) => deleteTrip(trip._id)}
+                    onClick={(e) => deleteTrip(trip._id? trip._id.$oid: null)}
                   >
                     Borrar
                   </button>
