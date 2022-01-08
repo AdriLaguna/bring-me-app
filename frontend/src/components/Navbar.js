@@ -11,6 +11,12 @@ export const Navbar = () => (
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
+                <Link className="nav-link" to="/user">Users</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/trip">Trips</Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/about">About</Link>
               </li>
             </ul>
