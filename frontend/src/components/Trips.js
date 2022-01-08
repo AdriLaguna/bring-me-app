@@ -88,7 +88,7 @@ export const Trips = () => {
   const deleteTrip = async (id) => {
     const tripResponse = window.confirm("Are you sure you want to delete it?");
     if (tripResponse) {
-      const res = await fetch(`${API}/trip/${id._id}`, {
+      const res = await fetch(`${API}/trip/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
