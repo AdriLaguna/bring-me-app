@@ -184,6 +184,12 @@ def get_trips_by_driver(id):
     print(response)
     return Response(response, mimetype="application/json")
 
+@app.route("/trip/date/<date>", methods=["GET"])
+def get_trips_by_date(date):
+    trip = mongo.db.trips.find({"date": date})
+    response = json_util.dumps(trip)
+    return Response(response, mimetype="application/json")
+
 @app.route("/trip/minseats/<numseats>", methods=["GET"])
 def get_trips_with_minimum_seats(numseats):
     trips = mongo.db.trips.find({"seats": {"$gte": int(numseats)}})

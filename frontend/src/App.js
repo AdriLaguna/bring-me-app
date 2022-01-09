@@ -6,6 +6,7 @@ import {Users} from './components/Users'
 import {Navbar} from './components/Navbar'
 //-----
 import {Trips} from './components/Trips'
+import {SearchTrips} from './components/SearchTrips'
 //-----
 import 'bootswatch/dist/lux/bootstrap.min.css'
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/user" component={Users} />
           [//-----]
           <Route path="/trip" component={Trips} />
+          <Route path="/searchtrips" component={SearchTrips} />
           [//-----]
         </Switch>
       </div>
