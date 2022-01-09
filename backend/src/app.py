@@ -167,6 +167,7 @@ def create_trip():
 def get_trips():
     trips = mongo.db.trips.find()
     response = json_util.dumps(trips)
+    print(response)
     return Response(response, mimetype="application/json")
 
 
@@ -176,6 +177,12 @@ def get_trip(id):
     response = json_util.dumps(trip)
     return Response(response, mimetype="application/json")
 
+@app.route("/trip/driver/<id>", methods=["GET"])
+def get_trips_by_driver(id):
+    trip = mongo.db.trips.find({"driver": id})
+    response = json_util.dumps(trip)
+    print(response)
+    return Response(response, mimetype="application/json")
 
 @app.route("/trip/minseats/<numseats>", methods=["GET"])
 def get_trips_with_minimum_seats(numseats):
