@@ -205,7 +205,7 @@ export const Trips = () => {
             </button>
         </form>
       </div>
-      <div className="col-md-6">
+      <div className="col-md-8">
         <table className="table table-striped">
           <thead>
             <tr>
