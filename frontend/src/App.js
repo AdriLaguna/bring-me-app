@@ -8,6 +8,8 @@ import {Navbar} from './components/Navbar'
 import {Trips} from './components/Trips'
 import {SearchTrips} from './components/SearchTrips'
 //-----
+import {Messages} from './components/Messages'
+//-----
 import 'bootswatch/dist/lux/bootstrap.min.css'
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
           <Route path="/trip" component={Trips} />
           <Route path="/searchtrips" component={SearchTrips} />
           [//-----]
+          <Route path="/messages" component={Messages} />
         </Switch>
       </div>
     </Router>
