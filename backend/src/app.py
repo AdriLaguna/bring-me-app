@@ -5,7 +5,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 from bson.objectid import ObjectId
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identify, jwt_required
 
 app = Flask(__name__)
 app.config[
@@ -408,20 +407,6 @@ def get_gasolinera_biodiesel():
         if gasolinera['Precio Biodiesel'] != "":
             data_filtrada.append(gasolinera)
     return {"gasolineras":data_filtrada}
-
-#login
-
-@app.route('/token', methods=['POST'])
-def create_token():
-    email = request.json.get["email", None]
-    password = request.json.get["password", None]
-    if email != "usuario registrado" or password != "contraseña de usuario":
-        return jsonify({"msg": "Bad username or password"}), 401
-
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
-    
-    return jsonify(responde_body), 200
 
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
