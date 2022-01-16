@@ -9,6 +9,7 @@ export const SearchTrips = () => {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   
+  const [filtering, setFiltering] = useState(false);
   const [id, setId] = useState("");
 
   const nameInput = useRef(null);
@@ -17,25 +18,32 @@ export const SearchTrips = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (driver){
-      getTripsByDriver(driver);
-    }else{
-      if (date){
-        getTripsByDate(date);
+    if (filtering){
+      if (driver){
+        getTripsByDriver(driver);
       }else{
-        if (seats){
-          getTripsByMinimumSeats(seats);
+        if (date){
+          getTripsByDate(date);
         }else{
-          if (origin && !destination){
-            getTripsByOrigin(origin);
-          }else if (!origin && destination){
-            getTripsByDestination(destination);
-          }else if (origin && destination){
-            getTripsByOriginAndDestination(origin,destination);
+          if (seats){
+            getTripsByMinimumSeats(seats);
+          }else{
+            if (origin && !destination){
+              getTripsByOrigin(origin);
+            }else if (!origin && destination){
+              getTripsByDestination(destination);
+            }else if (origin && destination){
+              getTripsByOriginAndDestination(origin,destination);
+            }else{
+              getReset();
+            }
           }
-        }
-      } 
+        } 
+      }
+    }else{
+        getTrips();
     }
+
     setDriver("");
     setDate("");
     setOrigin("");
@@ -44,6 +52,12 @@ export const SearchTrips = () => {
     nameInput.current.focus();  
   };
 
+    const getTrips = async () => {
+    const res = await fetch(`${API}/trip`);
+    const data = await res.json();
+    setTrips(data);
+  };
+  
   const getTripsByDriver = async (id) => {
     const res = await fetch(`${API}/trip/driver/${id}`);
     const data = await res.json();
@@ -80,13 +94,26 @@ export const SearchTrips = () => {
     setTrips(data);
   };
 
-/*
+  const getReset = async () => {
+    setFiltering(false);
+    getTrips();
+  }
+
   useEffect(() => {
-    getTripsByDriver("61a35f04398e895596a5f6f7");
+    getTrips("");
   }, []);
-*/
+
+  
+  if (filtering){
   return (
     <div className="row">
+      <div className="row">
+        <button
+          className="btn btn-primary btn-block"
+          onClick={(e) => getReset()}
+        >
+        Volver
+        </button>
       <div className="col md-4">
         <form onSubmit={handleSubmit} className="card card-body">
           <div className="form-group">
@@ -137,6 +164,7 @@ export const SearchTrips = () => {
             </button>
         </form>
       </div>
+      </div>
       <div className="col-md-6">
         <table className="table table-striped">
           <thead>
@@ -172,4 +200,51 @@ export const SearchTrips = () => {
       </div>
     </div>
   );
+  }else{
+    return (
+      <div className="row">
+        <div className="row">
+        <button
+          className="btn btn-primary btn-block"
+          onClick={(e) => setFiltering(true)}
+        >
+        Filtrar
+        </button>
+        <div className="col-md-6">
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Conductor</th>
+                <th>Fecha</th>
+                <th>Origen</th>
+                <th>Origen (Lat)</th>
+                <th>Origen (Lon)</th>
+                <th>Destino</th>
+                <th>Destino (Lat)</th>
+                <th>Destino (Lon)</th>
+                <th>Asientos</th>
+              </tr>
+            </thead>
+            <tbody>
+              {trips.map((trip) => (
+                <tr key={trip._id}>
+                  <td>{trip.driver}</td>
+                  <td>{trip.date}</td>
+                  <td>{trip.origin}</td>
+                  <td>{trip.originLatitude}</td>
+                  <td>{trip.originLongitude}</td>
+                  <td>{trip.destination}</td>
+                  <td>{trip.destinationLatitude}</td>
+                  <td>{trip.destinationLongitude}</td>
+                  <td>{trip.seats}</td>
+                  
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+    );
+  }
 };
