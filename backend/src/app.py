@@ -264,9 +264,9 @@ def update_trip(id):
 
 @app.route("/trip/<id>", methods=["DELETE"])
 def delete_trip(id):
-    mongo.db.trips.delete_one({"_id": ObjectId(id)})
-    response = jsonify({"message": "Trip with id=" + id + " deleted succesfully"})
-    return response
+    data = mongo.db.trips.delete_one({"_id": ObjectId(id)})
+    response = json_util.dumps(data)
+    return Response(response, mimetype="application/json")
 
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -363,6 +363,12 @@ def delete_message(id):
     mongo.db.messages.delete_one({"_id": ObjectId(id)})
     response = jsonify({"message": "Message with id=" + id + " deleted succesfully"})
     return response
+
+@app.route("/message/<id>", methods=["GET"])
+def get_messageById(id):
+    data = mongo.db.messages.find_one({"_id": ObjectId(id)})
+    response = json_util.dumps(data)
+    return Response(response, mimetype="application/json")
 
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
