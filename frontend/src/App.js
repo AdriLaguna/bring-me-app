@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
-import {About} from './components/About'
+import {OpenData} from './components/OpenData'
 import {Users} from './components/Users'
 import {Navbar} from './components/Navbar'
 //-----
@@ -18,7 +18,7 @@ function App() {
       <Navbar/>
       <div className="container p-2">
         <Switch>
-          <Route path="/about" component={About} />
+          <Route path="/opendata" component={OpenData} />
           <Route path="/user" component={Users} />
           [//-----]
           <Route path="/trip" component={Trips} />

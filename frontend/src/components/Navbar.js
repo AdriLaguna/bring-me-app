@@ -20,13 +20,13 @@ export const Navbar = () => (
                 <Link className="nav-link" to="/trip">Gestionar Viajes</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/messages">Messages</Link>
+                <Link className="nav-link" to="/messages">Mensajes</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/userprofile">Perfil Usuario</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/about">About</Link>
+                <Link className="nav-link" to="/opendata">Datos Abiertos</Link>
               </li>
             </ul>
           </div>

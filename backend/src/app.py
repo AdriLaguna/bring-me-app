@@ -412,7 +412,8 @@ def get_gasolinera_biodiesel():
     for gasolinera in data:
         if gasolinera['Precio Biodiesel'] != "":
             data_filtrada.append(gasolinera)
-    return {"gasolineras":data_filtrada}
+    response = json_util.dumps(data_filtrada)
+    return Response(response, mimetype="application/json")
 
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
