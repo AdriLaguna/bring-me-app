@@ -9,7 +9,7 @@ import Markers from './Markers'
 const API = process.env.REACT_APP_API;
 
 const MapView = () => {
-    const {gasolineras} = fetch(`${API}/trip`)
+    const {gasolineras} = fetch(`${API}/gasolineras-biodiesel`)
   return (
     <MapContainer center={{ lat: "40.1498916", lng: "-4.8803695" }} zoom={6}>
       <TileLayer
