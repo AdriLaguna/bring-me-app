@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify, Response
+import cloudinary
+import cloudinary.uploader
 from flask_pymongo import PyMongo
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,6 +15,12 @@ app.config[
 mongo = PyMongo(app)
 
 CORS(app)
+
+cloudinary.config(
+    cloud_name="pepebravo-uma",
+    api_key="998694649361965",
+    api_secret="0Ro2NXoAAigu0qfBuJHfdkBKPZU"
+)
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Users
