@@ -165,19 +165,17 @@ export const SearchTrips = () => {
         </form>
       </div>
       </div>
-      <div className="col-md-6">
+      <div className="col md-6">
         <table className="table table-striped">
           <thead>
             <tr>
               <th>Conductor</th>
               <th>Fecha</th>
               <th>Origen</th>
-              <th>Origen (Lat)</th>
-              <th>Origen (Lon)</th>
+
               <th>Destino</th>
-              <th>Destino (Lat)</th>
-              <th>Destino (Lon)</th>
               <th>Asientos</th>
+              <th>Vehículo</th>
             </tr>
           </thead>
           <tbody>
@@ -186,13 +184,11 @@ export const SearchTrips = () => {
                 <td>{trip.driver}</td>
                 <td>{trip.date}</td>
                 <td>{trip.origin}</td>
-                <td>{trip.originLatitude}</td>
-                <td>{trip.originLongitude}</td>
+
                 <td>{trip.destination}</td>
-                <td>{trip.destinationLatitude}</td>
-                <td>{trip.destinationLongitude}</td>
+
                 <td>{trip.seats}</td>
-                
+                <td><img src={trip.imageUrl} width="100" alt="" /></td>
               </tr>
             ))}
           </tbody>
@@ -210,19 +206,18 @@ export const SearchTrips = () => {
         >
         Filtrar
         </button>
-        <div className="col-md-6">
+        <div className="col md-6">
           <table className="table table-striped">
             <thead>
               <tr>
                 <th>Conductor</th>
                 <th>Fecha</th>
                 <th>Origen</th>
-                <th>Origen (Lat)</th>
-                <th>Origen (Lon)</th>
+
                 <th>Destino</th>
-                <th>Destino (Lat)</th>
-                <th>Destino (Lon)</th>
+
                 <th>Asientos</th>
+                <th>Vehículo</th>
               </tr>
             </thead>
             <tbody>
@@ -231,13 +226,11 @@ export const SearchTrips = () => {
                   <td>{trip.driver}</td>
                   <td>{trip.date}</td>
                   <td>{trip.origin}</td>
-                  <td>{trip.originLatitude}</td>
-                  <td>{trip.originLongitude}</td>
+
                   <td>{trip.destination}</td>
-                  <td>{trip.destinationLatitude}</td>
-                  <td>{trip.destinationLongitude}</td>
+
                   <td>{trip.seats}</td>
-                  
+                  <td><img src={trip.imageUrl} width="100" alt="" /></td>
                 </tr>
               ))}
             </tbody>

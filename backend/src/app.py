@@ -16,6 +16,9 @@ mongo = PyMongo(app)
 
 CORS(app)
 
+# David: yo creo que esto debería ir en el frontend, que es el que en realidad envía la foto
+# Si acaso en el frontend habría que añadir un endpoint para pasar la url de la foto a los datos
+# del usuario que conduce.
 cloudinary.config(
     cloud_name="pepebravo-uma",
     api_key="998694649361965",
@@ -138,6 +141,7 @@ def create_trip():
     destinationLatitude = request.json["destinationLatitude"]
     destinationLongitude = request.json["destinationLongitude"]
     seats = request.json["seats"]
+    imageUrl = request.json["imageUrl"]
 
     if (
         driver
@@ -161,6 +165,7 @@ def create_trip():
                 "destinationLatitude": float(destinationLatitude),
                 "destinationLongitude": float(destinationLongitude),
                 "seats": int(seats),
+                "imageUrl" : imageUrl,
             }
         )
         response = jsonify(
@@ -235,6 +240,7 @@ def update_trip(id):
     destinationLatitude = request.json["destinationLatitude"]
     destinationLongitude = request.json["destinationLongitude"]
     seats = request.json["seats"]
+    imageUrl = request.json["imageUrl"]
 
     if (
         driver
@@ -260,6 +266,7 @@ def update_trip(id):
                     "destinationLatitude": float(destinationLatitude),
                     "destinationLongitude": float(destinationLongitude),
                     "seats": int(seats),
+                    "imageUrl" : imageUrl,
                 }
             },
         )
@@ -273,8 +280,8 @@ def update_trip(id):
 @app.route("/trip/<id>", methods=["DELETE"])
 def delete_trip(id):
     data = mongo.db.trips.delete_one({"_id": ObjectId(id)})
-    response = json_util.dumps(data)
-    return Response(response, mimetype="application/json")
+    response = jsonify({"message": "Trip with id=" + id + " deleted succesfully"})
+    return response
 
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------

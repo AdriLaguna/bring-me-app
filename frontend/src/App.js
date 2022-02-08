@@ -7,6 +7,7 @@ import {Navbar} from './components/Navbar'
 //-----
 import {Trips} from './components/Trips'
 import {SearchTrips} from './components/SearchTrips'
+import {NewTrip} from './components/NewTrip'
 //-----
 import {Messages} from './components/Messages'
 //-----
@@ -23,8 +24,10 @@ function App() {
           [//-----]
           <Route path="/trip" component={Trips} />
           <Route path="/searchtrips" component={SearchTrips} />
+          <Route path="/newtrip" component={NewTrip} />
           [//-----]
           <Route path="/messages" component={Messages} />
+          [//-----]
         </Switch>
       </div>
     </Router>

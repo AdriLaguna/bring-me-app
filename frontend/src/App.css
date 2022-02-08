@@ -2,3 +2,24 @@
   width: 75vw;
   height: 75vh;
 }
+
+.app {
+  height: 100vh;
+  display: flex;
+  align-items: left;
+  justify-content: left;
+ }
+ .app_uploadButton {
+  height: 2rem;
+  width: 3rem;
+  background-color: black;
+  color: white;
+ }
+ 
+ .app_uploadedImg {
+   
+   width: 30%;
+   position: absolute;
+   top: 100px;
+  }
+

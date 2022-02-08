@@ -20,6 +20,9 @@ export const Navbar = () => (
                 <Link className="nav-link" to="/trip">Gestionar Viajes</Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link" to="/newtrip">Nuevo Viaje</Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/messages">Mensajes</Link>
               </li>
               <li className="nav-item">

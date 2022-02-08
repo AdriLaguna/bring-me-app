@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Redirect } from "react-router-dom";
 
 const API = process.env.REACT_APP_API;
 
-export const Trips = () => {
+export const NewTrip = () => {
   const [driver, setDriver] = useState("");
   const [date, setDate] = useState("");
   const [origin, setOrigin] = useState("");
@@ -13,7 +14,7 @@ export const Trips = () => {
   const [destinationLongitude, setDestinationLongitude] = useState("");
   const [seats, setSeats] = useState("");
   
-  const [editing, setEditing] = useState(false);
+  const [creado, setCreado] = useState(false);
   const [id, setId] = useState("");
 
   const nameInput = useRef(null);
@@ -27,7 +28,7 @@ export const Trips = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!editing) {
+    if (!creado) {
       const res = await fetch(`${API}/trip`, {
         method: "POST",
         headers: {
@@ -47,6 +48,7 @@ export const Trips = () => {
         }),
       });
       const data = await res.json();
+      setCreado(true);
       console.log(data);
     } else {
       const res = await fetch(`${API}/trip/${id}`, {
@@ -69,11 +71,11 @@ export const Trips = () => {
       });
       const data = await res.json();
       console.log(data);
-      setEditing(false);
+      setCreado(false);
       setId("");
-    }
-    await getTrips();
 
+    }
+  
     setDriver("");
     setDate("");
     setOrigin("");
@@ -84,46 +86,7 @@ export const Trips = () => {
     setDestinationLongitude("");
     setSeats("");
     setImageUrl("");
-    nameInput.current.focus();  
-  };
-
-  const getTrips = async () => {
-    const res = await fetch(`${API}/trip`);
-    const data = await res.json();
-    setTrips(data);
-  };
-
-  const deleteTrip = async (id) => {
-    const tripResponse = window.confirm("Are you sure you want to delete it?");
-    if (tripResponse) {
-      const res = await fetch(`${API}/trip/${id}`, {
-        method: "DELETE",
-      });
-      const data = await res.json();
-      console.log(data);
-      await getTrips();
-    }
-  };
-
-  const editTrip = async (id) => {
-    const res = await fetch(`${API}/trip/${id}`);
-    const data = await res.json();
-
-    setEditing(true);
-    setId(id);
-
-    // Reset
-    setDriver(data.driver);
-    setDate(data.date);
-    setOrigin(data.origin);
-    setOriginLatitude(data.originLatitude);
-    setOriginLongitude(data.originLongitude);
-    setDestination(data.destination);
-    setDestinationLatitude(data.destinationLatitude);
-    setDestinationLongitude(data.destinationLongitude);
-    setSeats(data.seats);
-    setImageUrl(data.imageUrl);
-    nameInput.current.focus();
+    nameInput.current.focus(); 
   };
 
   const handleClick = () => {
@@ -148,21 +111,17 @@ export const Trips = () => {
     .catch((err) => console.log(err));
 };
 
-  useEffect(() => {
-    getTrips();
-  }, []);
-
-  return (
+if (!creado){
+    return (
     <div className="row">
-      <div className="col-md-4">
+      <div className="col md-4">
       Foto del vehículo: &nbsp;
-            <input type="file" className="app_uploadInput"/>
-        <button className="app_uploadButton" onClick={handleClick}>Subir</button>
-        &nbsp;<img src={imageUrl} width="50" alt="" />
+            <input type="file" className="app_uploadInput" />
+        &nbsp;<button className="app_uploadButton" onClick={handleClick}>Subir</button>
         <br />
         <form onSubmit={handleSubmit} className="card card-body">
           <div className="form-group">
-          <input
+            <input
               type="hidden"
               onChange={(e) => setImageUrl(e.target.value)}
               value={imageUrl}
@@ -245,58 +204,19 @@ export const Trips = () => {
             <br />
           </div>
           <button className="btn btn-primary btn-block">
-            {editing ? "Actualizar Viaje" : "Crear Viaje"}
+                Crear Viaje
             </button>
         </form>
       </div>
-      <div className="col-md-8">
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>Conductor</th>
-              <th>Fecha</th>
-              <th>Origen</th>
-              <th>Origen (Lat)</th>
-              <th>Origen (Lon)</th>
-              <th>Destino</th>
-              <th>Destino (Lat)</th>
-              <th>Destino (Lon)</th>
-              <th>Asientos</th>
-              <th>Vehículo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {trips.map((trip) => (
-              <tr key={trip._id}>
-                <td>{trip.driver}</td>
-                <td>{trip.date}</td>
-                <td>{trip.origin}</td>
-                <td>{trip.originLatitude}</td>
-                <td>{trip.originLongitude}</td>
-                <td>{trip.destination}</td>
-                <td>{trip.destinationLatitude}</td>
-                <td>{trip.destinationLongitude}</td>
-                <td>{trip.seats}</td>
-                <td><img src={trip.imageUrl} width="100" alt="" /></td>
-                <td>
-                  <button
-                    className="btn btn-secondary btn-sm btn-block"
-                    onClick={(e) => editTrip(trip._id? trip._id.$oid: null)}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm btn-block"
-                    onClick={(e) => deleteTrip(trip._id? trip._id.$oid: null)}
-                  >
-                    Borrar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="col md-8">
+      <div className="col md-8">
+        <img src={imageUrl} className="app_uploadedImg" alt="" />
+    </div>
       </div>
     </div>
-  );
+    );
+    }else{
+        return(Redirect("/"));
+    }
+
 };
