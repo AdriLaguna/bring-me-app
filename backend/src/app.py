@@ -388,11 +388,16 @@ def get_messageById(id):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------
 # Datos externos
-@app.route("/precio-carburante", methods=["GET"])
-def get_precio_carburante():
+@app.route("/precio-carburante/<ccaa>", methods=["GET"])
+def get_precio_carburante(ccaa):
     url = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/"
-    data = requests.get(url).json()
-    return data
+    data = requests.get(url).json()['ListaEESSPrecio']
+    data_filtrada = []
+    for gasolinera in data:
+        if gasolinera['IDCCAA'] == ccaa:
+            data_filtrada.append(gasolinera)
+    response = json_util.dumps(data_filtrada)
+    return Response(response, mimetype="application/json")
 
 # gasolineras por codigo de provincia
 # malaga es 29
