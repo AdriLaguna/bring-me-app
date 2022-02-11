@@ -34,7 +34,7 @@ const MapView = () => {
     const res = await fetch(`${API}/precio-carburante/${ccaa}`);
     const data = await res.json();
     setGasolineras(data);
-
+    
     //const {gasolineras} = fetch(`${API}/gasolineras-biodiesel`)
   };
   
@@ -47,7 +47,7 @@ const MapView = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setCcaa(ccaa)
-    if(ccaa!="00"){
+    if(ccaa!=="00"){
       getGasolinerasByCcaa(ccaa)
     }else{
       setGasolineras([])
@@ -57,6 +57,9 @@ const MapView = () => {
 
   return (
     <div className="row">
+      <table>
+      <tr>
+      <td>
       <form onSubmit={handleSubmit} target="_blank">
       Gasolineras de venta al público por Comunidad Autónoma: 
       <select name="ccaa" onChange={(e) => setCcaa(e.target.value)}>
@@ -82,7 +85,11 @@ const MapView = () => {
         <option value="19">Melilla</option>
     </select>
       <input type="submit" value="Filtrar"/>
-      </form>
+      </form></td><td align="right">Leyenda: </td>
+      <td align="right"><img src="/gasolinera.png" width="20" /> Gasolinera</td>
+      <td align="right"><img src="/biofuel-svgrepo-com.svg" width="20" /> Gasolinera con Biodiesel</td>
+      </tr>
+      </table>
     <div>
     <MapContainer center={{ lat: lat , lng: lng  }} zoom={zoom}>
       <TileLayer
@@ -90,6 +97,24 @@ const MapView = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       ></TileLayer>
       
+      {gasolineras.map(gasolinera => (
+        <Marker key={gasolinera.IDEESS}
+                position={[gasolinera['Latitud'].replace(",","."), gasolinera['Longitud (WGS84)'].replace(",",".")]}
+                icon={gasolinera['Precio Biodiesel']==="" ? icon : icon2}
+                
+        >
+           <Tooltip direction='top' opacity={1} >
+
+            <p> Estación: {gasolinera.IDEESS} ({gasolinera.Rótulo}) </p>
+            <p> {gasolinera.Localidad} ({gasolinera.Provincia}) </p>
+            <p> Precio Gasoleo A: {gasolinera['Precio Gasoleo A']} </p>
+            <p> Precio Gasolina 95: {gasolinera['Precio Gasolina 95 E5']} </p>
+            {gasolinera['Precio Biodiesel']!=="" ? <p> Precio Biodiesel: {gasolinera['Precio Biodiesel']} </p> : ""}
+          </Tooltip>
+
+        </Marker>  
+      ))}
+
       {gasolinerasbio.map(gasolinera => (
         <Marker key={gasolinera.IDEESS}
                 position={[gasolinera['Latitud'].replace(",","."), gasolinera['Longitud (WGS84)'].replace(",",".")]}
@@ -107,25 +132,7 @@ const MapView = () => {
         </Marker>  
       ))}
 
-      {gasolineras.map(gasolinera => (
-        <Marker key={gasolinera.IDEESS}
-                position={[gasolinera['Latitud'].replace(",","."), gasolinera['Longitud (WGS84)'].replace(",",".")]}
-                icon={icon}
-                
-        >
-           <Tooltip direction='top' opacity={1} >
-
-            <p> Estación: {gasolinera.IDEESS} ({gasolinera.Rótulo}) </p>
-            <p> {gasolinera.Localidad} ({gasolinera.Provincia}) </p>
-            <p> Precio Gasoleo A: {gasolinera['Precio Gasoleo A']} </p>
-            <p> Precio Gasolina 95: {gasolinera['Precio Gasolina 95 E5']} </p>
-            
-          </Tooltip>
-
-        </Marker>  
-      ))}
-
-     </MapContainer>
+      </MapContainer>
      </div>
      </div>
   );
